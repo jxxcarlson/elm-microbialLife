@@ -155,7 +155,7 @@ rhs model = column [paddingXY 10 25, spacing 10, Style.mediumBackground, height 
 
 
 textColumn = column [padding 10, spacing 10, Style.paper, height (px 606), width (px 500), scrollbarY, Font.size 10]
-                           [Markdown.Elm.toHtml ExtendedMath Strings.text |> Element.html]
+                           [Markdown.Elm.toHtmlWithTOC ExtendedMath Strings.text |> Element.html]
 
 
 title : String -> Element msg

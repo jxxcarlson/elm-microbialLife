@@ -46,8 +46,8 @@ pre { font-size: 12px; margin-left: 18px; line-height: 18px;}
 .mm-olist-item {
 	list-style: none;
   margin-bottom: 8px;
-  padding-left: 18px;
-  text-indent: -18px;
+  padding-left: 10px;
+  text-indent: -10px;
 }
 .mm-ulist-item {
 	list-style: none;
