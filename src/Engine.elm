@@ -47,8 +47,8 @@ cellStyle =
     }
 
 
-nextState : Int -> Int -> State -> State
-nextState period t state =
+nextState : State -> State
+nextState state =
     state
       |> tick
       |> moveOrganisms

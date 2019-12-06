@@ -18,7 +18,7 @@ initialState s =
   let
       ((seed, nextId), organisms) = initialPopulation (s, 0)
   in
-    { organisms = organisms
+    {  organisms = organisms
      , seed = seed
      , nextId = nextId
      }

@@ -11,8 +11,8 @@ type SpeciesName = Mono | Brio| Ferocious
 type Motion = Immobile | Random Int | Hunter Int
 
 type alias Characteristics =
-     {     name : SpeciesName
-        ,  minNumberOfCells : Int
+     {    name : SpeciesName
+        , minNumberOfCells : Int
         , maxNumberOfCells : Int
         , growthRate : Float
         , minArea : Float
@@ -20,7 +20,6 @@ type alias Characteristics =
         , color : Color
         , lifeSpan : Int
         , moves : Motion
-
       }
 
 motionStep : Species -> Int

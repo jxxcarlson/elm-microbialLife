@@ -87,7 +87,7 @@ update msg model =
           case model.appState of
               Running ->
                 ({model | counter = model.counter + 1
-                  , state = Engine.nextState EngineData.config.cycleLength model.counter model.state }, Cmd.none)
+                  , state = Engine.nextState model.state }, Cmd.none)
               Paused -> (model, Cmd.none)
 
         SetAppState appState ->
@@ -154,7 +154,7 @@ rhs model = column [padding 10, spacing 10, Style.mediumBackground, height fill,
               [runButton model, pauseButton model, resetButton model]
 
 
-textColumn = column [padding 10, spacing 10, Style.paper, height fill, width (px 400), scrollbarY]
+textColumn = column [padding 10, spacing 10, Style.paper, height fill, width (px 400), scrollbarY, Font.size 12]
                            [Markdown.Elm.toHtml ExtendedMath Strings.text |> Element.html]
 
 
