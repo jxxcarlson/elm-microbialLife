@@ -4,3 +4,6 @@ index.html
 make.sh
 app/Main.js
 tests/VerifyExamples/
+Main.min.js
+app/Main.min.js
+publish.sh
