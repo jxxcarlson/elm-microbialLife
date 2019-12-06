@@ -154,7 +154,7 @@ color organism =
      Color.rgb 0 1 0
    else if ageFraction < 0.3 then
      let
-        x = 2.5*ageFraction + 0.2
+        x = ageFraction + 0.8
       in
       Color.rgb x x 0
    else if ageFraction < 0.8 then

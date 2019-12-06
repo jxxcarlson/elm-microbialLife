@@ -10,16 +10,21 @@ import Browser
 import Element exposing (..)
 import Element.Font as Font
 import Element.Background as Background
+import Element.Input as Input
 import Html exposing (Html)
 import Engine
 import EngineData
 import CellGrid.Render
 import State exposing(State)
+import Random
 import Time
 import Style
 import String.Interpolate exposing(interpolate)
 import Report
 import Organism
+import Markdown.Elm
+import Markdown.Option exposing(..)
+import Strings
 
 
 main =
@@ -36,13 +41,17 @@ type alias Model =
     , output : String
     , counter : Int
     , state : State
+    , appState : AppState
     }
 
+type AppState = Running | Paused
 
 type Msg
     = NoOp
     | CellGrid CellGrid.Render.Msg
     | Tick Time.Posix
+    | SetAppState AppState
+    | Reset
 
 
 type alias Flags =
@@ -54,7 +63,8 @@ init flags =
     ( { input = "App started"
       , output = "App started"
       , counter = 0
-      , state = (State.initialState 400 )
+      , state = (State.initialState (Random.initialSeed 400) )
+      , appState = Paused
       }
     , Cmd.none
     )
@@ -74,8 +84,22 @@ update msg model =
             ( model, Cmd.none)
 
         Tick _ ->
-            ({model | counter = model.counter + 1
-              , state = Engine.nextState EngineData.config.cycleLength model.counter model.state }, Cmd.none)
+          case model.appState of
+              Running ->
+                ({model | counter = model.counter + 1
+                  , state = Engine.nextState EngineData.config.cycleLength model.counter model.state }, Cmd.none)
+              Paused -> (model, Cmd.none)
+
+        SetAppState appState ->
+            ({ model | appState = appState}, Cmd.none)
+
+        Reset ->
+            ( { model | state = State.initialState (model.state.seed)
+                      , counter = 0
+                      , appState = Paused
+              }
+              , Cmd.none)
+
 
 --
 -- VIEW
@@ -90,20 +114,21 @@ view model =
 mainColumn : Model -> Element Msg
 mainColumn model =
     column Style.mainColumn
-            [ title "Life"
-            , displayState model
-            , displayDashboard model
+            [ title "Microbial Life I"
+            , display model
             ]
 
+display : Model -> Element Msg
+display model =
+    row [ spacing 10, centerX] [lhs model, rhs model, textColumn]
+
 displayDashboard  model =
-    row [Font.size 14, spacing 15, centerX, Background.color Style.lightColor, width (px (round EngineData.config.renderWidth)), height (px 30)] [
+    row [Font.size 14, spacing 15, centerX, Background.color Style.mediumColor, width (px (round EngineData.config.renderWidth)), height (px 30)] [
       el [Font.family [Font.typeface "Courier"]] (text <| clock model)
       ]
 
-
-
 clock : Model -> String
-clock  model  =
+clock  model =
     let
         kString = model.counter |> (\x -> x + 1) |> String.fromInt
         population = List.length model.state.organisms |> String.fromInt
@@ -111,24 +136,59 @@ clock  model  =
         density = Organism.maximumPopulationDensity 3 model.state.organisms |> String.fromFloat |> String.padLeft 4 ' '
 
     in
-    interpolate " t: {0}, p = {1}, a = {2}, d = {3}" [kString, population, averageAge, density]
+    interpolate " t = {0}, population = {1}, average age = {2}, density = {3}" [kString, population, averageAge, density]
 
-displayState : Model -> Element Msg
-displayState model =
-    row [centerX ] [
-       Engine.render
-         model.state
-         |> Element.html |> Element.map CellGrid
-     ]
+
+
+lhs model =
+    column [] [
+        row [ ] [
+           Engine.render
+             model.state
+             |> Element.html |> Element.map CellGrid
+         ]
+       , displayDashboard model
+    ]
+
+rhs model = column [padding 10, spacing 10, Style.mediumBackground, height fill, width (px 150)]
+              [runButton model, pauseButton model, resetButton model]
+
+
+textColumn = column [padding 10, spacing 10, Style.paper, height fill, width (px 400), scrollbarY]
+                           [Markdown.Elm.toHtml ExtendedMath Strings.text |> Element.html]
+
 
 title : String -> Element msg
 title str =
-    row [ centerX, Font.bold ] [ text str ]
+    row [ centerX, Font.bold, Font.color Style.titleColor ] [ text str ]
 
 
-outputDisplay : Model -> Element msg
-outputDisplay model =
+
+-- CONTROLS --
+
+
+pauseButton : Model -> Element Msg
+pauseButton model =
     row [ centerX ]
-        [ text model.output ]
+        [ Input.button (Style.button 100 [Style.colorIfSelected Paused model.appState])
+            { onPress = Just (SetAppState Paused)
+            , label = el [ centerX, centerY ] (text "Pause")
+            }
+        ]
 
-
+runButton : Model -> Element Msg
+runButton model =
+    row [ centerX ]
+        [ Input.button (Style.button 100 [Style.colorIfSelected Running model.appState])
+            { onPress = Just (SetAppState Running)
+            , label = el [ centerX, centerY ] (text "Run")
+            }
+        ]
+resetButton : Model -> Element Msg
+resetButton model =
+    row [ centerX ]
+        [ Input.button (Style.button 100 [])
+            { onPress = Just Reset
+            , label = el [ centerX, centerY ] (text "Reset")
+            }
+        ]

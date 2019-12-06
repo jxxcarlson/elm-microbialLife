@@ -13,10 +13,10 @@ type alias State =
   }
 
 
-initialState : Int -> State
-initialState k =
+initialState : Random.Seed -> State
+initialState s =
   let
-      ((seed, nextId), organisms) = initialPopulation ((Random.initialSeed k), 0)
+      ((seed, nextId), organisms) = initialPopulation (s, 0)
   in
     { organisms = organisms
      , seed = seed

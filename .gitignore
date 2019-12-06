@@ -2,3 +2,5 @@
 elm-stuff/
 index.html
 make.sh
+app/Main.js
+tests/VerifyExamples/

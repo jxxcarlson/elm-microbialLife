@@ -18,7 +18,7 @@ config =
 
 render : State -> Html CellGrid.Render.Msg
 render s =
-    CellGrid.Render.asHtml { width = 500, height = 500} cellStyle (toCellGrid s)
+    CellGrid.Render.asHtml { width = 580, height = 580} cellStyle (toCellGrid s)
 
 
 

@@ -18,6 +18,6 @@ config : Config
 config = {
      tickLoopInterval = 30
     , cycleLength = 30
-    , renderWidth = 500
+    , renderWidth = 580
     , gridWidth = 80
    }
