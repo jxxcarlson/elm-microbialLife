@@ -2,8 +2,11 @@
 
 .mm-paragraph {
 	white-space: normal;
-	font-size: 12pt;
+	font-size: 14px;
+	line-height: 18px;
 }
+
+
 
 .toc-level-0 { margin-left: 0em; font-size : 10pt; line-height: 4pt; font-weight: normal; text-decoration: none; }
 .toc-level-1 {  margin-left: 1em; font-size : 10pt; line-height: 4pt; font-weight: normal; text-decoration: none;  }
@@ -11,7 +14,14 @@
 .toc-level-3 {  margin-left: 3em; font-size : 10pt; line-height: 4pt; font-weight: normal; text-decoration: none;  }
 
 .mm-code {font-family: "Courier New"
-  , Courier, monospace; padding: 8px; background-color: #f5f5f5; font-size: 11pt;
+  , Courier, monospace; padding: 8px; font-size: 14px; margin-left: 18px; line-spacing: 18px;
+}
+
+
+pre { font-size: 12px; margin-left: 18px; line-height: 18px;}
+
+.nn-code {font-family: "Courier New"
+  , Courier, monospace; padding: 8px; background-color: #f5f5f5; font-size: 14px; margin-left: 18px;
 }
 .mm-inline-code {font-family: "Courier New"
   , Courier, monospace; padding-left: 5px; padding-right: 5px;background-color: #f5f5f5; font-size: 11pt;
@@ -27,11 +37,12 @@
   width: 60%;
 }
 
-.mm-h1 {font-size: 24pt}
-.mm-h2 {font-size: 18pt}
-.mm-h3 {font-size: 12pt}
-.mm-h4 {font-size: 12pt}
-.mm-h5 {font-size: 12pt}
+.mm-h1 {font-size: 24px}
+.mm-h2 {font-size: 18px}
+.mm-h3 {font-size: 12px}
+.mm-h4 {font-size: 12px}
+.mm-h5 {font-size: 12px}
+
 .mm-olist-item {
 	list-style: none;
   margin-bottom: 8px;

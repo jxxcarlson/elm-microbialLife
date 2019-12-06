@@ -157,15 +157,15 @@ color organism =
         x = ageFraction + 0.8
       in
       Color.rgb x x 0
-   else if ageFraction < 0.8 then
+   else if ageFraction < 0.7 then
       let
-         y = (ageFraction - 0.3)/0.5
+         y = (ageFraction - 0.3)/0.4
          yy = (1 - y)
       in
       Color.rgb y y yy
    else
       let
-         z = (ageFraction - 0.8)/0.8
+         z = (ageFraction - 0.7)/0.7
          zz = 1 - z
       in
       Color.rgb (0.5*z) zz zz
