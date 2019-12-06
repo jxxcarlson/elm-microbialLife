@@ -30,7 +30,7 @@ toCellGrid s =
         initialGrid = CellGrid.initialize (Dimensions gridWidth gridWidth) (\i j -> Color.black)
 
         setCell : Organism -> CellGrid Color -> CellGrid Color
-        setCell e grid = CellGrid.set (Organism.position  e) (Organism.color e) grid
+        setCell o grid = CellGrid.set (Organism.position  o) (Organism.color o) grid
     in
         List.foldl setCell initialGrid s.organisms
 
@@ -49,8 +49,41 @@ cellStyle =
 
 nextState : Int -> Int -> State -> State
 nextState period t state =
+    state
+      |> tick
+      |> moveOrganisms
+      |> growOrganisms
+      |> cellDivision
+      |> cellDeath
+
+
+tick : State -> State
+tick state =
+    {state | organisms = List.map Organism.tick state.organisms}
+
+cellDeath : State -> State
+cellDeath state =
+    let
+      (s, newOrganisms) = Action.cellDeath (state.seed, state.organisms)
+    in
+      {state | seed = s, organisms = newOrganisms}
+
+
+cellDivision : State -> State
+cellDivision state =
+    let
+      (s, newOrganisms) = Action.cellDivision ((state.seed, state.nextId), state.organisms)
+    in
+      {state | seed = Tuple.first s,  nextId = Tuple.second s, organisms = newOrganisms}
+
+moveOrganisms : State -> State
+moveOrganisms state =
   let
       (newSeed, newOrganisms) = Action.moveOrganisms (state.seed, state.organisms)
   in
-    { seed = newSeed, organisms = newOrganisms}
+    { state | seed = newSeed, organisms = newOrganisms}
 
+
+growOrganisms : State -> State
+growOrganisms state =
+    { state | organisms = List.map Organism.grow state.organisms}

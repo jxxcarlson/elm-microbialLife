@@ -18,7 +18,7 @@ import State exposing(State)
 import Time
 import Style
 import String.Interpolate exposing(interpolate)
-
+import Report
 
 
 main =
@@ -96,18 +96,20 @@ mainColumn model =
 
 displayDashboard  model =
     row [Font.size 14, spacing 15, centerX, Background.color Style.lightColor, width (px (round EngineData.config.renderWidth)), height (px 30)] [
-      el [Font.family [Font.typeface "Courier"]] (text <| clock model.counter)
+      el [Font.family [Font.typeface "Courier"]] (text <| clock model)
       ]
 
 
 
-clock : Int -> String
-clock k =
+clock : Model -> String
+clock  model  =
     let
-        kString = k |> (\x -> x + 1) |> String.fromInt |> String.padLeft 6 ' '
+        kString = model.counter |> (\x -> x + 1) |> String.fromInt |> String.padLeft 6 ' '
+        population = List.length model.state.organisms |> String.fromInt
+        aa = Report.averageAge model.state.organisms |> String.fromFloat
 
     in
-    interpolate "{0}" [kString]
+    interpolate "{0}, population = {1}, age = {1}" [kString, population, aa]
 
 displayState : Model -> Element Msg
 displayState model =
