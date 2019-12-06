@@ -19,6 +19,7 @@ import Time
 import Style
 import String.Interpolate exposing(interpolate)
 import Report
+import Organism
 
 
 main =
@@ -104,12 +105,13 @@ displayDashboard  model =
 clock : Model -> String
 clock  model  =
     let
-        kString = model.counter |> (\x -> x + 1) |> String.fromInt |> String.padLeft 6 ' '
+        kString = model.counter |> (\x -> x + 1) |> String.fromInt
         population = List.length model.state.organisms |> String.fromInt
-        aa = Report.averageAge model.state.organisms |> String.fromFloat
+        averageAge = Report.averageAge model.state.organisms |> String.fromFloat
+        density = Organism.maximumPopulationDensity 3 model.state.organisms |> String.fromFloat |> String.padLeft 4 ' '
 
     in
-    interpolate "{0}, population = {1}, age = {1}" [kString, population, aa]
+    interpolate " t: {0}, p = {1}, a = {2}, d = {3}" [kString, population, averageAge, density]
 
 displayState : Model -> Element Msg
 displayState model =

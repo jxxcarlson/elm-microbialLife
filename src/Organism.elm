@@ -1,9 +1,13 @@
-module Organism exposing (Organism(..), setAge, color,age, id, displace, readyToDivide, tick, readyToDie, grow,minArea, position, setPosition ,setArea, setId)
+module Organism exposing (Organism(..), setAge
+   , distance, populationDensityAtOrganism, maximumPopulationDensity
+   ,  color,age, id, displace, readyToDivide, species
+   , tick, readyToDie, grow,minArea, position, setPosition ,setArea, setId)
 
 import CellGrid exposing(Position)
 import Color exposing(Color)
 import Species exposing(Species(..), SpeciesName(..))
 import EngineData exposing(config)
+import Utility
 
 type Organism =
   Organism OrganismData
@@ -19,10 +23,60 @@ type alias OrganismData =
        , age : Int
       }
 
+{-|
+    import State exposing(monoSeed)
+
+    distance 6 5 monoSeed
+    --> 1
+-}
+distance : Int -> Int -> Organism -> Float
+distance i j (Organism data) =
+    let
+       p = data.position
+       dx = p.row - i |> toFloat
+       dy = p.column - j |> toFloat
+    in
+       sqrt (dx*dx + dy*dy)
+
 tick : Organism -> Organism
 tick  organism =
     map (\data -> {data | age = data.age  + 1}) organism
 
+{-|
+
+    import State exposing(monoSeed)
+
+    o2 : Organism
+    o2 = displace 1 0 monoSeed
+
+    populationDensityAtOrganism 1 monoSeed [monoSeed] |> String.fromFloat
+    --> "0.1111"
+
+    populationDensityAtOrganism 2 monoSeed [monoSeed, o2] |> String.fromFloat
+    --> "0.08"
+
+-}
+populationDensityAtOrganism : Float -> Organism -> List Organism -> Float
+populationDensityAtOrganism d o list =
+    let
+        p = position o
+    in
+      populationDensity p.row p.column d list
+
+maximumPopulationDensity  : Float -> List Organism -> Float
+maximumPopulationDensity d list =
+    List.map (\o -> populationDensityAtOrganism d o list) list
+      |> List.maximum
+      |> Maybe.withDefault 0
+
+populationDensity : Int -> Int -> Float -> List Organism -> Float
+populationDensity i j d list =
+    let
+       numberOfNeighbors = List.filter (\o -> distance i j o < d) list |> List.length |> toFloat
+       width = 2 * d + 1
+       area_ = width * width
+    in
+       numberOfNeighbors / area_ |> Utility.roundTo 4
 
 age : Organism -> Int
 age (Organism data) =
@@ -96,12 +150,25 @@ color organism =
   let
      ageFraction = (age organism |> toFloat) / (Species.lifeSpan (species organism) |> toFloat)
   in
-   if ageFraction < 0.3 then
-      Color.rgb 1.0 1.0 ageFraction
+   if ageFraction < 0.02 then
+     Color.rgb 0 1 0
+   else if ageFraction < 0.3 then
+     let
+        x = 2.5*ageFraction + 0.2
+      in
+      Color.rgb x x 0
    else if ageFraction < 0.8 then
-      Species.color (species organism)
+      let
+         y = (ageFraction - 0.3)/0.5
+         yy = (1 - y)
+      in
+      Color.rgb y y yy
    else
-      Color.rgb 0.5 0 0
+      let
+         z = (ageFraction - 0.8)/0.8
+         zz = 1 - z
+      in
+      Color.rgb (0.5*z) zz zz
 
 position : Organism -> Position
 position (Organism data) = data.position

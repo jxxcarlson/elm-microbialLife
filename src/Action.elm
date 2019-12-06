@@ -7,6 +7,7 @@ import Random.List
 import Organism exposing(Organism(..))
 import EngineData
 import State
+import Species
 
 
 
@@ -34,6 +35,7 @@ cellDivision (s, list) =
                 nextId = id + 1
                 ((maybeOrganism, list2), s1) = Random.step (Random.List.choose list) (Tuple.first s)
                 organismToDivide = maybeOrganism |> Maybe.withDefault State.monoSeed
+                d = Organism.populationDensityAtOrganism 4 organismToDivide list
                 daughter1 = organismToDivide
                   |> Organism.setArea (Organism.minArea organismToDivide)
                   |> Organism.setAge 0
@@ -46,7 +48,10 @@ cellDivision (s, list) =
                   |> Organism.setAge 0
                 newList = List.filter (\o -> Organism.id o /= (Organism.id daughter1)) list
             in
+              if d < 0.31 then
                 ((s3, nextId + 1), daughter1 :: daughter2 :: newList )
+              else
+                (s, list)
 
 
 moveOrganisms : (Random.Seed, List Organism) -> (Random.Seed, List Organism)
@@ -57,8 +62,9 @@ moveOrganisms (s, list) =
 move : Random.Seed -> Organism -> (Random.Seed, Organism)
 move seed organism =
     let
-         (deltaI, s1) = Random.step (Random.int -1 1) seed
-         (deltaJ, s2) = Random.step (Random.int -1 1) s1
+         stepSize = Species.motionStep (Organism.species organism)
+         (deltaI, s1) = Random.step (Random.int -stepSize stepSize) seed
+         (deltaJ, s2) = Random.step (Random.int -stepSize stepSize) s1
          oldPosition = Organism.position organism
          (i, j) = ((oldPosition.row + deltaI |> clampX), (oldPosition.column + deltaJ |> clampY))
     in

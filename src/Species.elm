@@ -1,4 +1,5 @@
-module Species exposing (Species(..), SpeciesName(..), lifeSpan, maxArea, minArea, color, growthRate)
+module Species exposing (Species(..), SpeciesName(..),Motion(..), lifeSpan, maxArea, minArea,
+     motionStep, color, growthRate)
 
 
 import Color exposing(Color)
@@ -6,6 +7,8 @@ import Color exposing(Color)
 type Species = Species Characteristics
 
 type SpeciesName = Mono | Brio| Ferocious
+
+type Motion = Immobile | Random Int | Hunter Int
 
 type alias Characteristics =
      {     name : SpeciesName
@@ -16,10 +19,16 @@ type alias Characteristics =
         , maxArea : Float
         , color : Color
         , lifeSpan : Int
+        , moves : Motion
 
       }
 
-
+motionStep : Species -> Int
+motionStep (Species c) =
+    case c.moves of
+        Immobile -> 0
+        Random k -> k
+        Hunter k -> k
 
 
 map : (Characteristics -> a) -> Species -> a

@@ -2,7 +2,7 @@ module State exposing (State, initialState, monoSeed)
 
 import Random
 import Organism exposing(Organism(..))
-import Species exposing(Species(..), SpeciesName(..))
+import Species exposing(Species(..), SpeciesName(..), Motion(..))
 import EngineData
 import Color
 
@@ -58,7 +58,7 @@ monoSeed =
        , area = 1
        , diameter = 1
        , numberOfCells  = 1
-       , position = {row = 0, column =0}
+       , position = {row = 5, column = 5}
        , age = 0
       }
 
@@ -69,9 +69,10 @@ mono = Species {
         , maxNumberOfCells = 1
         , maxArea = 3
         , minArea = 1
-        , growthRate = 0.1
+        , growthRate = 0.01
         , color =  Color.rgb 0 0.7 0.8
         , lifeSpan = 600
+        , moves = Random 1
   }
 
 brio = Species {
@@ -80,9 +81,10 @@ brio = Species {
            , maxNumberOfCells = 16
            , maxArea = 8
            , minArea = 1
-           , growthRate = 0.1
-          , color =  Color.rgb 0.5 0.7 0.1
+           , growthRate = 0.02
+          , color =  Color.rgb 0.1 0.8 0.1
           , lifeSpan = 100
+          , moves = Immobile
 
      }
 
@@ -95,5 +97,6 @@ ferocious = Species {
            , growthRate = 0.1
            , color =  Color.rgb 0.7 0.2 0.2
           , lifeSpan = 100
+          , moves = Hunter 3
      }
 
