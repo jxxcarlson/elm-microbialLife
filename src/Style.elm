@@ -22,6 +22,7 @@ button w a =
     [ paddingXY 10 4
     , Font.size 14
     , width (px w)
+    , height (px 30)
     , Font.color lightColor
     , Background.color charcoal
     ] ++ a
