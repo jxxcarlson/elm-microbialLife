@@ -65,12 +65,27 @@ asHtml { width, height } cr list =
 asSvg : CellStyle a -> List a -> Svg Msg
 asSvg style list =
     let
+        elements : List (Svg Msg)
         elements =
             List.map (\o -> renderCell style (style.toPosition o) o) list
                 |> List.foldr (::) []
-    in
-    Svg.g [] elements
 
+
+        br : Svg Msg
+        br = backGroundRectangle 580 580 (Color.rgb 0 0 0)
+    in
+    Svg.g [] (br :: elements)
+
+backGroundRectangle : Float -> Float -> Color -> Svg Msg
+backGroundRectangle width height color =
+    Svg.rect
+        [ Svg.Attributes.width (String.fromFloat width)
+        , Svg.Attributes.height (String.fromFloat height)
+        , Svg.Attributes.x (String.fromFloat 0)
+        , Svg.Attributes.y (String.fromFloat 0)
+        , Svg.Attributes.fill (toCssString color)
+        ]
+        []
 
 renderCell : CellStyle a -> Position -> a -> Svg Msg
 renderCell style position value =
