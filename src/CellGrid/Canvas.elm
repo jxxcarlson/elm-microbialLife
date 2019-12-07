@@ -16,17 +16,16 @@ import Svg.Attributes
 
 {-| Customize how a cell is rendered.
 `Color` is as defined in the package `avh4/elm-color`, e.g. `Color.rgb 1 0 0` is bright red.
-    cellStyle : CellStyle Bool
+
+    cellStyle : CellStyle Organism
     cellStyle =
-        { toColor =
-            \b ->
-                if b then
-                    Color.green
-                else
-                    Color.red
-        , cellWidth = 10
-        , cellHeight = 10
+        {  toColor = (\o -> Organism.color o)
+         , toRadius = (\o -> 5* (Organism.diameter o))
+         , toPosition = (\o -> Organism.position o)
+         , cellWidth = EngineData.config.renderWidth / (toFloat EngineData.config.gridWidth)
+         , cellHeight = EngineData.config.renderWidth / (toFloat EngineData.config.gridWidth)
         }
+
 -}
 type alias CellStyle a =
     { cellWidth : Float
@@ -57,13 +56,13 @@ asHtml { width, height } cr list =
         , Svg.Attributes.width (String.fromInt width)
         , Svg.Attributes.viewBox ("0 0 " ++ String.fromInt width ++ " " ++ String.fromInt height)
         ]
-        [ asSvg cr list ]
+        [ asSvg { width = width, height = height } cr list ]
 
 
 {-| Render a cell grid as an svg `<g>` element, useful for integration with other svg.
 -}
-asSvg : CellStyle a -> List a -> Svg Msg
-asSvg style list =
+asSvg : { width : Int, height : Int } -> CellStyle a -> List a -> Svg Msg
+asSvg { width, height } style list =
     let
         elements : List (Svg Msg)
         elements =
@@ -72,15 +71,15 @@ asSvg style list =
 
 
         br : Svg Msg
-        br = backGroundRectangle 580 580 (Color.rgb 0 0 0)
+        br = backGroundRectangle width height (Color.rgb 0 0 0)
     in
     Svg.g [] (br :: elements)
 
-backGroundRectangle : Float -> Float -> Color -> Svg Msg
+backGroundRectangle : Int -> Int -> Color -> Svg Msg
 backGroundRectangle width height color =
     Svg.rect
-        [ Svg.Attributes.width (String.fromFloat width)
-        , Svg.Attributes.height (String.fromFloat height)
+        [ Svg.Attributes.width (String.fromInt width)
+        , Svg.Attributes.height (String.fromInt height)
         , Svg.Attributes.x (String.fromFloat 0)
         , Svg.Attributes.y (String.fromFloat 0)
         , Svg.Attributes.fill (toCssString color)
