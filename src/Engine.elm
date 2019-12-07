@@ -6,22 +6,16 @@ import State exposing(State)
 import Html exposing (Html)
 import Organism exposing(Organism)
 import Color exposing(Color)
-import CellGrid exposing(CellGrid, Dimensions)
--- import CellGrid.Render exposing (CellStyle)
 import CellGrid.Canvas exposing (CellStyle)
-
 
 
 config =
     { maxRandInt = 100000}
 
 
-
 render : State -> Html CellGrid.Canvas.Msg
 render s =
     CellGrid.Canvas.asHtml { width = 580, height = 580} cellStyle s.organisms
-
-
 
 
 cellStyle : CellStyle Organism
@@ -31,8 +25,6 @@ cellStyle =
      , toPosition = (\o -> Organism.position o)
      , cellWidth = EngineData.config.renderWidth / (toFloat EngineData.config.gridWidth)
      , cellHeight = EngineData.config.renderWidth / (toFloat EngineData.config.gridWidth)
-     , gridLineColor = Color.rgba 0 0 0 0
-     , gridLineWidth = 0.25
     }
 
 

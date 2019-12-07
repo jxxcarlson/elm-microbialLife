@@ -26,8 +26,6 @@ import Svg.Attributes
                     Color.red
         , cellWidth = 10
         , cellHeight = 10
-        , gridLineWidth = 1
-        , gridLineColor = Color.black
         }
 -}
 type alias CellStyle a =
@@ -36,8 +34,6 @@ type alias CellStyle a =
     , toColor : a -> Color
     , toRadius : a -> Float
     , toPosition : a -> Position
-    , gridLineWidth : Float
-    , gridLineColor : Color
     }
 
 
@@ -75,16 +71,6 @@ asSvg style list =
     in
     Svg.g [] elements
 
-{-| Render a cell grid as an svg `<g>` element, useful for integration with other svg.
--}
-asSvg1 : CellStyle a -> CellGrid a -> Svg Msg
-asSvg1 style cellGrid =
-    let
-        elements =
-            CellGrid.indexedMap (\i j -> renderCell style (Position i j)) cellGrid
-                |> CellGrid.foldr (::) []
-    in
-    Svg.g [] elements
 
 renderCell : CellStyle a -> Position -> a -> Svg Msg
 renderCell style position value =
@@ -94,9 +80,7 @@ renderCell style position value =
         , Svg.Attributes.cx (String.fromFloat (style.cellWidth * toFloat position.column))
         , Svg.Attributes.cy (String.fromFloat (style.cellHeight * toFloat position.row))
         , Svg.Attributes.r (String.fromFloat (style.toRadius value))
-        , Svg.Attributes.strokeWidth (String.fromFloat style.gridLineWidth)
         , Svg.Attributes.fill (toCssString (style.toColor value))
-        , Svg.Attributes.stroke (toCssString style.gridLineColor)
         , Mouse.onDown
             (\r ->
                 let
