@@ -34,6 +34,8 @@ type alias CellStyle a =
     { cellWidth : Float
     , cellHeight : Float
     , toColor : a -> Color
+    , toRadius : a -> Float
+    , toPosition : a -> Position
     , gridLineWidth : Float
     , gridLineColor : Color
     }
@@ -52,20 +54,31 @@ type alias Msg =
 
 {-| Render a cell grid into an html element of the given width and height.
 -}
-asHtml : { width : Int, height : Int } -> CellStyle a -> CellGrid a -> Html Msg
-asHtml { width, height } cr cellGrid =
+asHtml : { width : Int, height : Int } -> CellStyle a -> List a -> Html Msg
+asHtml { width, height } cr list =
     Svg.svg
         [ Svg.Attributes.height (String.fromInt height)
         , Svg.Attributes.width (String.fromInt width)
         , Svg.Attributes.viewBox ("0 0 " ++ String.fromInt width ++ " " ++ String.fromInt height)
         ]
-        [ asSvg cr cellGrid ]
+        [ asSvg cr list ]
 
 
 {-| Render a cell grid as an svg `<g>` element, useful for integration with other svg.
 -}
-asSvg : CellStyle a -> CellGrid a -> Svg Msg
-asSvg style cellGrid =
+asSvg : CellStyle a -> List a -> Svg Msg
+asSvg style list =
+    let
+        elements =
+            List.map (\o -> renderCell style (style.toPosition o) o) list
+                |> List.foldr (::) []
+    in
+    Svg.g [] elements
+
+{-| Render a cell grid as an svg `<g>` element, useful for integration with other svg.
+-}
+asSvg1 : CellStyle a -> CellGrid a -> Svg Msg
+asSvg1 style cellGrid =
     let
         elements =
             CellGrid.indexedMap (\i j -> renderCell style (Position i j)) cellGrid
@@ -75,33 +88,12 @@ asSvg style cellGrid =
 
 renderCell : CellStyle a -> Position -> a -> Svg Msg
 renderCell style position value =
-    Svg.rect
-        [ Svg.Attributes.width (String.fromFloat 30)
-        , Svg.Attributes.height (String.fromFloat 30)
-        , Svg.Attributes.x (String.fromFloat (style.cellWidth * toFloat position.column))
-        , Svg.Attributes.y (String.fromFloat (style.cellHeight * toFloat position.row))
-        --, Svg.Attributes.strokeWidth (String.fromFloat style.gridLineWidth)
-        , Svg.Attributes.fill (toCssString (style.toColor value))
-       -- , Svg.Attributes.stroke (toCssString style.gridLineColor)
-        , Mouse.onDown
-            (\r ->
-                let
-                    ( x, y ) =
-                        r.clientPos
-                in
-                { cell = position, coordinates = { x = x, y = y } }
-            )
-        ]
-        []
-
-
-renderCell1 : CellStyle a -> Position -> a -> Svg Msg
-renderCell1 style position value =
-    Svg.rect
+    Svg.circle
         [ Svg.Attributes.width (String.fromFloat style.cellWidth)
         , Svg.Attributes.height (String.fromFloat style.cellHeight)
-        , Svg.Attributes.x (String.fromFloat (style.cellWidth * toFloat position.column))
-        , Svg.Attributes.y (String.fromFloat (style.cellHeight * toFloat position.row))
+        , Svg.Attributes.cx (String.fromFloat (style.cellWidth * toFloat position.column))
+        , Svg.Attributes.cy (String.fromFloat (style.cellHeight * toFloat position.row))
+        , Svg.Attributes.r (String.fromFloat (style.toRadius value))
         , Svg.Attributes.strokeWidth (String.fromFloat style.gridLineWidth)
         , Svg.Attributes.fill (toCssString (style.toColor value))
         , Svg.Attributes.stroke (toCssString style.gridLineColor)
@@ -115,6 +107,8 @@ renderCell1 style position value =
             )
         ]
         []
+
+
 
 
 {-| Use a faster toCssString

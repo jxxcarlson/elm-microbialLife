@@ -19,31 +19,19 @@ config =
 
 render : State -> Html CellGrid.Canvas.Msg
 render s =
-    CellGrid.Canvas.asHtml { width = 580, height = 580} cellStyle (toCellGrid s)
-
-
-
-toCellGrid : State -> CellGrid Organism
-toCellGrid s =
-    let
-        gridWidth = EngineData.config.gridWidth
-        initialGrid  : CellGrid Organism
-        initialGrid = CellGrid.initialize (Dimensions gridWidth gridWidth) (\i j -> State.nullOrganism)
-
-        setCell : Organism -> CellGrid Color -> CellGrid Color
-        setCell o grid = CellGrid.set (Organism.position  o) (Organism.color o) grid
-    in
-        List.foldl setCell initialGrid s.organisms
+    CellGrid.Canvas.asHtml { width = 580, height = 580} cellStyle s.organisms
 
 
 
 
-cellStyle : CellStyle Color
+cellStyle : CellStyle Organism
 cellStyle =
-    {  toColor = identity
+    {  toColor = (\o -> Organism.color o)
+     , toRadius = (\o -> 5* (Organism.diameter o))
+     , toPosition = (\o -> Organism.position o)
      , cellWidth = EngineData.config.renderWidth / (toFloat EngineData.config.gridWidth)
      , cellHeight = EngineData.config.renderWidth / (toFloat EngineData.config.gridWidth)
-     , gridLineColor = Color.rgb 0 0 0.6
+     , gridLineColor = Color.rgba 0 0 0 0
      , gridLineWidth = 0.25
     }
 

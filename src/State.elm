@@ -67,10 +67,10 @@ mono = Species {
           name = Mono
         , minNumberOfCells  = 1
         , maxNumberOfCells = 1
-        , maxArea = 3
+        , maxArea = 10
         , minArea = 1
         , growthRate = 0.01
-        , color =  Color.rgb 0 0.7 0.8
+        , color =  Color.rgba 0 0.7 0.8 0.5
         , lifeSpan = 600
         , moves = Random 1
   }
@@ -82,7 +82,7 @@ brio = Species {
            , maxArea = 8
            , minArea = 1
            , growthRate = 0.02
-          , color =  Color.rgb 0.1 0.8 0.1
+          , color =  Color.rgba 0.1 0.8 0.1 0.5
           , lifeSpan = 100
           , moves = Immobile
 
@@ -95,7 +95,7 @@ ferocious = Species {
            , maxArea = 8
            , minArea = 1
            , growthRate = 0.1
-           , color =  Color.rgb 0.7 0.2 0.2
+           , color =  Color.rgba 0.7 0.2 0.2 0.5
           , lifeSpan = 100
           , moves = Hunter 3
      }

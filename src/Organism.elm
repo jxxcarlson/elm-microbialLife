@@ -1,4 +1,4 @@
-module Organism exposing (Organism(..), setAge
+module Organism exposing (Organism(..), setAge, diameter
    , distance, populationDensityAtOrganism, maximumPopulationDensity
    ,  color,age, id, displace, readyToDivide, species
    , tick, readyToDie, grow,minArea, position, setPosition ,setArea, setId)
@@ -22,6 +22,8 @@ type alias OrganismData =
        , position : Position
        , age : Int
       }
+
+
 
 {-|
     import State exposing(monoSeed)
@@ -151,24 +153,24 @@ color organism =
      ageFraction = (age organism |> toFloat) / (Species.lifeSpan (species organism) |> toFloat)
   in
    if ageFraction < 0.02 then
-     Color.rgb 0 1 0
+     Color.rgba 0 1 0 0.5
    else if ageFraction < 0.3 then
      let
         x = ageFraction + 0.8
       in
-      Color.rgb x x 0
+      Color.rgba x x 0 0.5
    else if ageFraction < 0.7 then
       let
          y = (ageFraction - 0.3)/0.4
          yy = (1 - y)
       in
-      Color.rgb y y yy
+      Color.rgba y y yy 0.5
    else
       let
          z = (ageFraction - 0.7)/0.7
          zz = 1 - z
       in
-      Color.rgb (0.5*z) zz zz
+      Color.rgba (0.5*z) zz zz 0.5
 
 position : Organism -> Position
 position (Organism data) = data.position
