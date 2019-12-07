@@ -7,7 +7,8 @@ import Html exposing (Html)
 import Organism exposing(Organism)
 import Color exposing(Color)
 import CellGrid exposing(CellGrid, Dimensions)
-import CellGrid.Render exposing (CellStyle)
+-- import CellGrid.Render exposing (CellStyle)
+import CellGrid.Canvas exposing (CellStyle)
 
 
 
@@ -16,18 +17,18 @@ config =
 
 
 
-render : State -> Html CellGrid.Render.Msg
+render : State -> Html CellGrid.Canvas.Msg
 render s =
-    CellGrid.Render.asHtml { width = 580, height = 580} cellStyle (toCellGrid s)
+    CellGrid.Canvas.asHtml { width = 580, height = 580} cellStyle (toCellGrid s)
 
 
 
-toCellGrid : State -> CellGrid Color
+toCellGrid : State -> CellGrid Organism
 toCellGrid s =
     let
         gridWidth = EngineData.config.gridWidth
-        initialGrid  : CellGrid Color
-        initialGrid = CellGrid.initialize (Dimensions gridWidth gridWidth) (\i j -> Color.black)
+        initialGrid  : CellGrid Organism
+        initialGrid = CellGrid.initialize (Dimensions gridWidth gridWidth) (\i j -> State.nullOrganism)
 
         setCell : Organism -> CellGrid Color -> CellGrid Color
         setCell o grid = CellGrid.set (Organism.position  o) (Organism.color o) grid

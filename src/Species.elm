@@ -6,7 +6,7 @@ import Color exposing(Color)
 
 type Species = Species Characteristics
 
-type SpeciesName = Mono | Brio| Ferocious
+type SpeciesName = Mono | Brio| Ferocious | NullOrganism
 
 type Motion = Immobile | Random Int | Hunter Int
 

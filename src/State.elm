@@ -1,4 +1,4 @@
-module State exposing (State, initialState, monoSeed)
+module State exposing (State, initialState, monoSeed, nullOrganism)
 
 import Random
 import Organism exposing(Organism(..))
@@ -100,3 +100,26 @@ ferocious = Species {
           , moves = Hunter 3
      }
 
+nullSpecies = Species {
+             name = NullOrganism
+           , minNumberOfCells  = 0
+           , maxNumberOfCells = 0
+           , maxArea = 0
+           , minArea = 0
+           , growthRate = 0
+           , color =  Color.rgba 0 0 0 0
+          , lifeSpan = 0
+          , moves = Immobile
+     }
+
+nullOrganism : Organism
+nullOrganism =
+   Organism {
+         id = 0
+       , species = nullSpecies
+       , area = 0
+       , diameter = 0
+       , numberOfCells  = 0
+       , position = {row = 0, column = 0}
+       , age = 0
+      }
