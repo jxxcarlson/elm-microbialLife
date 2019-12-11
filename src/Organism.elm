@@ -1,7 +1,7 @@
 module Organism exposing (Organism(..), setAge, diameter
    , distance, populationDensityAtOrganism, maximumPopulationDensity
    ,  color,age, id, displace, readyToDivide, species
-   , tick, readyToDie, grow,minArea, position, setPosition ,setArea, setId)
+   , tick, readyToDie,area, grow,minArea, maxArea, position, setPosition ,setArea, setId)
 
 import CellGrid exposing(Position)
 import Color exposing(Color)
@@ -135,6 +135,12 @@ map f (Organism data) =
     Organism (f data)
 
 
+--pulsate_ : Float -> Float -> OrganismData -> OrganismData
+--pulsate_ k a o =
+--   let
+--       d =
+
+
 diameter : Organism -> Float
 diameter  (Organism data) = data.diameter
 
@@ -144,6 +150,10 @@ area  (Organism data) = data.area
 minArea : Organism -> Float
 minArea  (Organism data) = Species.minArea  data.species
 
+maxArea : Organism -> Float
+maxArea  (Organism data) = Species.maxArea  data.species
+
+
 growthRate : Organism -> Float
 growthRate organism = Species.growthRate (species organism)
 
@@ -151,26 +161,27 @@ color : Organism  -> Color
 color organism =
   let
      ageFraction = (age organism |> toFloat) / (Species.lifeSpan (species organism) |> toFloat)
+     t = 0.4
   in
    if ageFraction < 0.02 then
-     Color.rgba 0 1 0 0.5
+     Color.rgba 0 1 0 t
    else if ageFraction < 0.3 then
      let
         x = ageFraction + 0.8
       in
-      Color.rgba x x 0 0.5
+      Color.rgba x x 0 t
    else if ageFraction < 0.7 then
       let
          y = (ageFraction - 0.3)/0.4
          yy = (1 - y)
       in
-      Color.rgba y y yy 0.5
+      Color.rgba y y yy t
    else
       let
          z = (ageFraction - 0.7)/0.7
          zz = 1 - z
       in
-      Color.rgba (0.5*z) zz zz 0.5
+      Color.rgba (0.5*z) zz zz t
 
 position : Organism -> Position
 position (Organism data) = data.position

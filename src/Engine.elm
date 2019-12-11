@@ -20,8 +20,12 @@ render s =
 
 cellStyle : CellStyle Organism
 cellStyle =
+  let
+     arg = \o -> 0.05* (Organism.age o |> toFloat)
+     amplitude = \o -> 1.0 +1.00 * abs(sin(arg o))
+  in
     {  toColor = (\o -> Organism.color o)
-     , toRadius = (\o -> 5* (Organism.diameter o))
+     , toRadius = (\o -> 5* (amplitude o) * (Organism.diameter o) )
      , toPosition = (\o -> Organism.position o)
      , cellWidth = EngineData.config.renderWidth / (toFloat EngineData.config.gridWidth)
      , cellHeight = EngineData.config.renderWidth / (toFloat EngineData.config.gridWidth)

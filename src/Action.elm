@@ -59,13 +59,19 @@ moveOrganisms (s, list) =
     mapWithState move (s, list)
 
 
+
+
 move : Random.Seed -> Organism -> (Random.Seed, Organism)
 move seed organism =
     let
          stepSize = Species.motionStep (Organism.species organism)
-         (deltaI, s1) = Random.step (Random.int -stepSize stepSize) seed
-         (deltaJ, s2) = Random.step (Random.int -stepSize stepSize) s1
+         (deltaI_, s1) = Random.step (Random.int -stepSize stepSize) seed
+         (deltaJ_, s2) = Random.step (Random.int -stepSize stepSize) s1
          oldPosition = Organism.position organism
+         maxArea = Organism.maxArea organism
+         f = (2 * maxArea) / (Organism.area organism) |> sqrt
+         deltaI = f * (toFloat deltaI_) |> round
+         deltaJ = f * (toFloat deltaJ_) |> round
          (i, j) = ((oldPosition.row + deltaI |> clampX), (oldPosition.column + deltaJ |> clampY))
     in
        (s2, Organism.setPosition i j organism)
