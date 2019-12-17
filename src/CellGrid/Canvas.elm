@@ -71,7 +71,7 @@ asSvg { width, height } style list =
 
 
         br : Svg Msg
-        br = backGroundRectangle width height (Color.rgba 0.2 0.2 0.3 1.0)
+        br = backGroundRectangle width height (Color.rgba 0.15 0.15  0.20  1.0)
     in
     Svg.g [] (br :: elements)
 
