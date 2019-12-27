@@ -48,7 +48,7 @@ cellDivision (s, list) =
                   |> Organism.setAge 0
                 newList = List.filter (\o -> Organism.id o /= (Organism.id daughter1)) list
             in
-              if d < 0.31 then
+              if d < (organismToDivide |> Organism.species |> Species.crowdingThreshold) then
                 ((s3, nextId + 1), daughter1 :: daughter2 :: newList )
               else
                 (s, list)

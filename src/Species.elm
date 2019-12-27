@@ -1,5 +1,5 @@
 module Species exposing (Species(..), SpeciesName(..),Motion(..), lifeSpan, maxArea, minArea,
-     motionStep, color, growthRate)
+     motionStep, color, crowdingThreshold, growthRate)
 
 
 import Color exposing(Color)
@@ -19,6 +19,7 @@ type alias Characteristics =
         , maxArea : Float
         , color : Color
         , lifeSpan : Int
+        , crowdingThreshold : Float
         , moves : Motion
       }
 
@@ -36,6 +37,9 @@ map f (Species characteristics) =
 
 lifeSpan : Species -> Int
 lifeSpan species = map .lifeSpan species
+
+crowdingThreshold : Species -> Float
+crowdingThreshold species = map .crowdingThreshold species
 
 maxArea : Species -> Float
 maxArea species = map .maxArea species

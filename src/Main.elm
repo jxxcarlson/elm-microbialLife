@@ -22,6 +22,7 @@ import Style
 import String.Interpolate exposing(interpolate)
 import Report
 import Organism
+import Species
 import Markdown.Elm
 import Markdown.Option exposing(..)
 import Strings
@@ -55,7 +56,7 @@ type Msg
 
 
 type alias Flags =
-    {}
+    {seed : Int}
 
 
 init : Flags -> ( Model, Cmd Msg )
@@ -63,7 +64,7 @@ init flags =
     ( { input = "App started"
       , output = "App started"
       , counter = 0
-      , state = (State.initialState (Random.initialSeed 400) )
+      , state = (State.initialState (Random.initialSeed flags.seed) )
       , appState = Paused
       }
     , Cmd.none
@@ -134,9 +135,11 @@ clock  model =
         population = List.length model.state.organisms |> String.fromInt
         averageAge = Report.averageAge model.state.organisms |> String.fromFloat
         density = Organism.maximumPopulationDensity 3 model.state.organisms |> String.fromFloat |> String.padLeft 4 ' '
+        gr = Species.growthRate State.mono |> String.fromFloat
+        ct = Species.crowdingThreshold State.mono |> String.fromFloat
 
     in
-    interpolate " t = {0}, population = {1}, average age = {2}, density = {3}" [kString, population, averageAge, density]
+    interpolate " t = {0}, p = {1}, a = {2}, d = {3}, g = {4}, th = {5}" [kString, population, averageAge, density, gr, ct]
 
 
 

@@ -20,7 +20,7 @@ type alias OrganismData =
        , area : Float
        , numberOfCells : Int
        , position : Position
-       , age : Int
+        , age : Int
       }
 
 

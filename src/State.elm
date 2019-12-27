@@ -1,4 +1,4 @@
-module State exposing (State, initialState, monoSeed, nullOrganism)
+module State exposing (State, initialState, monoSeed, mono, nullOrganism)
 
 import Random
 import Organism exposing(Organism(..))
@@ -72,6 +72,8 @@ mono = Species {
         , growthRate = 0.006
         , color =  Color.rgba 0 0.7 0.8 0.5
         , lifeSpan = 600
+        , crowdingThreshold = 0.013
+
         , moves = Random 1
   }
 
@@ -84,6 +86,7 @@ brio = Species {
            , growthRate = 0.02
           , color =  Color.rgba 0.1 0.8 0.1 0.5
           , lifeSpan = 100
+          , crowdingThreshold = 0.2
           , moves = Immobile
 
      }
@@ -97,6 +100,7 @@ ferocious = Species {
            , growthRate = 0.1
            , color =  Color.rgba 0.7 0.2 0.2 0.5
           , lifeSpan = 100
+          , crowdingThreshold = 0.2
           , moves = Hunter 3
      }
 
@@ -109,6 +113,8 @@ nullSpecies = Species {
            , growthRate = 0
            , color =  Color.rgba 0 0 0 0
           , lifeSpan = 0
+          , crowdingThreshold = 0.2
+
           , moves = Immobile
      }
 

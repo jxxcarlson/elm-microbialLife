@@ -27,8 +27,18 @@
 
 <script>
 
+        // Generate random numbers to see UUID generator
+        const crypto = window.crypto || window.msCrypto;
+        const getRandomInts = (n) => {
+            const randInts = new Uint32Array(n);
+            crypto.getRandomValues(randInts);
+            return Array.from(randInts);
+        };
+
+        const randInts = getRandomInts(5);
+
 		var root = document.getElementById('main');
-		var app = Elm.Main.init({node: root, flags:  { width:  1200, height: 900 }});
+		var app = Elm.Main.init({node: root, flags:  { seed: randInts[0], width:  1200, height: 900 }});
 
 	 </script>
 
