@@ -175,7 +175,7 @@ color organism =
          y = (ageFraction - 0.3)/0.4
          yy = (1 - y)
       in
-      Color.rgba y y yy (0.6*t)
+      Color.rgba y y yy 0.7
    else
       let
          z = (ageFraction - 0.7)/0.7

@@ -16,7 +16,7 @@ type alias Config = {
 
 config : Config
 config = {
-     tickLoopInterval = 100
+     tickLoopInterval = 40
     , cycleLength = 30
     , renderWidth = 580
     , gridWidth = 400
